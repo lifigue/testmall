@@ -34,3 +34,18 @@ export function request(config) {
   return instance(config)
 }
 
+/* export function getHomeMultidata() {
+  return axios({
+    url: 'api/v1/home/multidata'
+  })
+}
+
+export function getHomeData(type, page) {
+  return axios({
+    url: 'api/v1/home/data',
+    params: {
+      type,
+      page
+    }
+  })
+} */

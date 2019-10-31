@@ -27,6 +27,7 @@ export default {
   methods:{
       colorchange(index){
           this.currentindex=index;
+          this.$emit('tabClick',index)
       }
   }
 }
