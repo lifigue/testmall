@@ -1,6 +1,6 @@
 <template>
-<div class="goods-item">
-    <img :src="goodsItem.show.img" alt="">
+<div class="goods-item" @click="itemClick">
+    <img :src="showImage" alt="" @load="imageLoad">
     <div class="goods-info">
         <p>{{ goodsItem.title }}</p>
         <span class="price">{{goodsItem.price}}</span>
@@ -16,13 +16,44 @@
 
 
 export default {
-  name: 'GoodsListItem', 
+  name: 'GoodsListItem',
+  data(){
+      return{
+          jumpid:''
+      } 
+  },
   props:{
       goodsItem:{
           type:Object,
           default(){
               return []
           }
+      }
+  },
+  computed:{
+      showImage(){
+          return this.goodsItem.image || this.goodsItem.show.img
+      },
+/*       idchangge(){
+         // return this.goodsItem.iid || this.goodsItem.item_id
+         if ('iid' in goodsItem){
+             return this.goodsItem.iid
+         }else{
+             return this.goodsItem.item_id
+         }
+      } */
+  },
+  methods:{
+      imageLoad(){
+          this.$bus.$emit("itemImageLoad")
+      },
+      itemClick(){
+          console.log("跳转到详情页")
+          this.jumpid = this.goodsItem.iid
+          if(!this.goodsItem.hasOwnProperty('iid')){
+              this.jumpid=this.goodsItem.item_id
+          }
+          this.$router.push('/detail/'+ this.jumpid)
       }
   }
 
@@ -31,7 +62,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .goods-item{
     padding-bottom: 40px;
     position:relative;

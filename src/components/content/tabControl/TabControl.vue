@@ -14,6 +14,7 @@ export default {
   props:{
       titles:{
           type:Array,
+          //default是对象或者数字时候，要用函数返回默认值
           default(){
               return []
           }
@@ -34,7 +35,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .tab-control{
     display:flex;
     text-align: center;
