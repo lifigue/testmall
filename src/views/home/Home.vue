@@ -26,7 +26,7 @@
 
     </scroll>
     <!-- 自定义组件没有click监听事件 -->
-    <back-top @click.native="backClick" v-show="isShow"></back-top>
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
 
 
   </div>
@@ -43,10 +43,11 @@ import SwiperAwesome from 'components/common/swiper/Swiperawesome'
 import TabControl from 'components/content/tabControl/TabControl'
 import GoodList from 'components/content/goods/GoodsList'
 import Scroll from 'components/common/scroll/Scroll'
-import BackTop from 'components/content/backTop/BackTop'
+
 
 import {getHomeMultidata,getHomeGoods} from 'network/home'
 import {debounce} from 'common/utils.js'
+import {backTopMixin} from 'common/mixin'
 
 
 
@@ -62,9 +63,10 @@ export default {
     TabControl,
     GoodList,
     Scroll,
-    BackTop,
+
     SwiperAwesome
   },
+  mixins:[backTopMixin],
   data(){
     return{
       banners:[],
@@ -75,7 +77,7 @@ export default {
         'sell':{page:0,list:[]},
       },
       currentType:'pop',
-      isShow:false,
+      // isShowBackTop:false,
       tabOffsetTop:0,
       isTabFixed:false,
       saveY:0,
@@ -127,11 +129,11 @@ export default {
       this.$refs.tabControl2.currentindex=index;
     },
     //scroll组件里加了ref="scroll", 可以通过this.$refs.scroll拿到scroll组件
-    backClick(){
-      this.$refs.scroll.scrollTo(0,0)
-    },
+    // backClick(){
+    //   this.$refs.scroll.scrollTo(0,0)
+    // },
     contentScroll(position){
-      this.isShow=-position.y>1000
+      this.isShowBackTop=-position.y>1000
       
       this.isTabFixed=(-position.y) >this.tabOffsetTop
     },

@@ -9,13 +9,16 @@
         <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"></detail-goods-info>
         <detail-param-info ref="params" :param-info="paramInfo"></detail-param-info>
         <detail-comment-info ref="comment" :comment-info="commentInfo"></detail-comment-info>
-        <goods-list ref="recommend" :goods="recommends"></goods-list>
+        <goods-list ref="recommend" :goods="recommends" class="goods-list"></goods-list>
     </scroll>
- 
+        <back-top class="back-top" @click.native="backClick" v-show="isShowBackTop"></back-top>
+    <detail-bottom-bar @addCart="addToCart"></detail-bottom-bar>
+    <!-- <toast :message="message" :show="show"/> -->
+  
 </div>
 
     
-</template>
+</template> 
 
 <script>
 import DetailNavBar from 'views/detail/childComps/DetailNavBar'
@@ -25,13 +28,17 @@ import DetailShopInfo from 'views/detail/childComps/DetailShopInfo'
 import DetailGoodsInfo from 'views/detail/childComps/DetailGoodsInfo'
 import DetailParamInfo from 'views/detail/childComps/DetailParamInfo'
 import DetailCommentInfo from 'views/detail/childComps/DetailCommentInfo'
+import DetailBottomBar from 'views/detail/childComps/DetailBottomBar'
 
 
 import Scroll from 'components/common/scroll/Scroll' 
 import GoodsList from 'components/content/goods/GoodsList'
+// import Toast from 'components/common/toast/Toast'
+
 
 import {getDetail,getRecommand,Goods,Shop,GoodsParam} from 'network/detail'
 import {debounce} from 'common/utils.js'
+import {backTopMixin} from 'common/mixin.js'
 
 export default {
     name: "Detail",
@@ -44,8 +51,12 @@ export default {
         DetailGoodsInfo,
         DetailParamInfo,
         DetailCommentInfo,
-        GoodsList
+        GoodsList,
+        DetailBottomBar,
+        // Toast
+
     },
+    mixins:[backTopMixin],
     data(){
         return{
             iid:null,
@@ -134,6 +145,28 @@ export default {
             
             }
 
+            this.isShowBackTop=-position.y>1000
+
+        },
+        addToCart(){
+            //获取购物车需要展示的信息
+            const product = {}
+            product.image = this.topImages[0]
+            product.title = this.goods.title
+            product.desc  = this.goods.desc
+            product.price = this.goods.realPrice
+            product.iid = this.iid
+            product.count = 1
+            product.checked = true
+            console.log(product)
+
+            // this.$store.commit('addCart',product)
+            this.$store.dispatch('addCart',product).then(res =>{ 
+                console.log(this.$toast)
+                this.$toast.show(res,1500)
+
+            })
+
         }
     }
     
@@ -155,7 +188,7 @@ export default {
   overflow: hidden;
   position:absolute;
   top:44px;
-  bottom:0px;
+  bottom:58px;
   left:0;
   right:0;
 }
@@ -163,5 +196,13 @@ export default {
     position:relative;
     z-index:9;
     background-color: #fff;
+}
+.back-top{
+    position:fixed;
+    bottom: 58px;
+    right: 10px;
+}
+.goods-list{
+    padding-bottom: 120px;
 }
 </style>
